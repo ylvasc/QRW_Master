@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import uuid
 
-results_base_dir = "results"
+results_base_dir = "results2"
 plots_dir = "plots"
 
 os.makedirs(plots_dir, exist_ok=True)

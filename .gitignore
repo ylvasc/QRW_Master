@@ -3,3 +3,5 @@ QRW/lib/
 results/*.pkl
 plots/*.png
 QRW/
+results2/*.pkl
+results3/*.pkl
