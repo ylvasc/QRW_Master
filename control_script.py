@@ -3,22 +3,21 @@ import time
 import numpy as np
 from tqdm import tqdm
 import uuid
+import subprocess
 
 results_base_dir = "results"
 os.makedirs(results_base_dir, exist_ok=True)
 
-alpha_values = np.array([0.1, 1.0, 2.0])
-beta_values = np.array([0.5, 1.0, 2.0])
+alpha_values = np.linspace(0.1, 2., 25, endpoint=True)#np.array([0.1, 1.0, 2.0])
+beta_values = np.linspace(0.5, 2., 25, endpoint=True)#np.array([0.5, 1.0, 2.0])
 
-n_sim = 100  # Number of states
-N_iter = 10  # Number of iterations per (alpha, beta) pair
+n_sim = 1000  # Number of states
+N_iter = 50  # Number of iterations per (alpha, beta) pair
 N = 100       # Number of Grover iterations
 max_jobs = 50  # Limit on concurrent jobs
-active_pids = []
+active_processes = []
 
-
-
-for a in alpha_values:
+for a in tqdm(alpha_values):
     for b in beta_values:
         unique_id = str(uuid.uuid4())[:8]
         file_name = f"results_{unique_id}.pkl"  
@@ -27,14 +26,14 @@ for a in alpha_values:
         # delete this after test
         print(f"Running with alpha={a}, beta={b}, n={n_sim}, N_iter={N_iter}, N={N}, save_path={save_path}")
 
-        pid = os.spawnlp(os.P_NOWAIT, "python3", "python3", "simulator.py", 
-                        str(a), str(b), str(n_sim), str(N_iter), str(N), save_path)
-        active_pids.append(pid)
-        
+        process = subprocess.Popen(["python", "simulator.py", str(a), str(b), str(n_sim), str(N_iter), str(N), save_path])
+        active_processes.append(process)
+
+        time.sleep(10)
 
 # Ensure all jobs finish
-for pid in active_pids:
-    os.waitpid(pid, 0)
+for process in active_processes:
+    process.wait()
 
 
 
