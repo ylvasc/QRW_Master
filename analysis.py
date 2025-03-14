@@ -84,7 +84,7 @@ all_variances = np.array(all_variances)
 
 
 if alpha_values.size == 0:
-    print("No valid data to plot.")
+    print("No valid data to plot.") #check
 else:
     fig, axs = plt.subplots(1, 2, figsize=(14, 6))
 
