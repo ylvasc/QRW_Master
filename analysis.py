@@ -3,81 +3,107 @@ import pickle as pkl
 import jax.numpy as jnp
 import numpy as np
 import matplotlib.pyplot as plt
+import uuid
 
 results_base_dir = "results"
+plots_dir = "plots"
 
+os.makedirs(plots_dir, exist_ok=True)
 
 alpha_values = []
 beta_values = []
 all_estimates = []
+all_variances = []
 
 for file_name in os.listdir(results_base_dir):
-    if file_name.endswith(".pkl"):
-        file_path = os.path.join(results_base_dir, file_name)
-
-        with open(file_path, "rb") as f:
-            data = pkl.load(f)
-
-        alpha = data["alpha"]
-        beta = data["beta"]
-        loss_funcs = data["loss_funcs"]  # Shape: (N_iter, n)
-        results = data["results"]  # Shape: (N_iter, n, N)
-
-        N_iter=results.shape[0]
-        n=results.shape[1]
-        N=results.shape[2]
-
-        estimates = []
-        cost_exp = np.zeros((N_iter, N))
-        
-
-        for i in range(N_iter):  
-            prob_distr = results[i]  
-         
-            loss_func = loss_funcs[i]  
-            
-            best_indices = jnp.argsort(prob_distr.max(axis=1))[::-1] 
-            best_index = best_indices[0] 
-
-            loss_sorted = jnp.sort(loss_func)  
-            estimate = (loss_sorted[best_index] - loss_sorted[0]) / (loss_sorted[-1] - loss_sorted[0])
-            estimates.append(float(estimate))
-
-
-
-            ##############plot loss func with best value
-            #plt.plot(loss_sorted)
-            #plt.scatter(best_indices[0], loss_sorted[best_indices[0]], color='red', s=100, marker='x', zorder=5)
-            #plt.title(f"Loss function with best value (Alpha={alpha}, Beta={beta}), estimate{estimate}")
-            #plt.grid()
-            #plt.show()
-            
-            cost_exp[i]=np.dot(prob_distr.T, loss_sorted)
+    if not file_name.endswith(".pkl"):
+        continue  # Skip non-PKL files
     
+    file_path = os.path.join(results_base_dir, file_name)
 
-        alpha_values.append(alpha)
-        beta_values.append(beta)
-        all_estimates.append(np.mean(estimates)) 
+    try:
+        with open(file_path, "rb") as f:
+            data = pkl.load(f)  
+    except (pkl.UnpicklingError, EOFError) as e:
+        print(f"Warning: Skipping corrupted file {file_name} ({e})")
+        continue
+    
+    # Ensure required keys exist
+    required_keys = {"alpha", "beta", "loss_funcs", "results"}
+    if not required_keys.issubset(data.keys()):
+        print(f"Warning: Skipping file {file_name} (missing required keys)")
+        continue
 
+    alpha, beta = data["alpha"], data["beta"]
+    loss_funcs, results = data["loss_funcs"], data["results"]
 
-        #############plot cost expectation value
-        #plt.plot(np.mean(cost_exp, axis=0))
-        #x=np.mean(cost_exp, axis=0)
-        #plt.title(f"Cost Expectation Value, estimate{x}")
-        #plt.show()
+    # Check for NaNs and correct shapes
+    if not isinstance(loss_funcs, np.ndarray) or not isinstance(results, np.ndarray):
+        print(f"Warning: Skipping file {file_name} (data is not NumPy arrays)")
+        continue
+    
+    if np.isnan(results).any() or np.isnan(loss_funcs).any():
+        print(f"Warning: Skipping file {file_name} (contains NaN values)")
+        continue
+    
+    if results.ndim != 3 or loss_funcs.ndim != 2:
+        print(f"Warning: Skipping file {file_name} (unexpected shape)")
+        continue
 
+    N_iter, n, N = results.shape
+    if loss_funcs.shape != (N_iter, n):
+        print(f"Warning: Skipping file {file_name} (loss_funcs shape mismatch)")
+        continue
+
+    estimates = []
+    cost_exp = np.zeros((N_iter, N))
+
+    for i in range(N_iter):
+        prob_distr = results[i]
+        loss_func = loss_funcs[i]
+
+        best_indices = jnp.argsort(prob_distr.max(axis=1))[::-1]
+        best_index = best_indices[0]
+
+        loss_sorted = jnp.sort(loss_func)
+        estimate = (loss_sorted[best_index] - loss_sorted[0]) / (loss_sorted[-1] - loss_sorted[0])
+        estimates.append(float(estimate))
+
+        cost_exp[i] = np.dot(prob_distr.T, loss_sorted)
+
+    alpha_values.append(alpha)
+    beta_values.append(beta)
+    all_estimates.append(np.mean(estimates))
+    all_variances.append(np.var(estimates))
 
 alpha_values = np.array(alpha_values)
 beta_values = np.array(beta_values)
 all_estimates = np.array(all_estimates)
+all_variances = np.array(all_variances)
 
 
 
-# Create a contour plot
-plt.figure(figsize=(8, 6))
-plt.tricontourf(alpha_values, beta_values, all_estimates, levels=20, cmap="viridis")
-plt.colorbar(label=f"Mean Performance over {N_iter} runs")
-plt.xlabel(r"$\alpha$")
-plt.ylabel(r"$\beta$")
-plt.title(f"Performance (for {n} states, {N} Grover reflections)")
-plt.show()
+if alpha_values.size == 0:
+    print("No valid data to plot.") #check
+else:
+    fig, axs = plt.subplots(1, 2, figsize=(14, 6))
+
+    contour1 = axs[0].tricontourf(alpha_values, beta_values, all_estimates, levels=20, cmap="viridis")
+    fig.colorbar(contour1, ax=axs[0], label=f"Mean Performance over {N_iter} runs")
+    axs[0].set_xlabel(r"$\alpha$")
+    axs[0].set_ylabel(r"$\beta$")
+    axs[0].set_title(f"Performance (for {n} states, {N} Grover reflections)")
+
+    contour2 = axs[1].tricontourf(alpha_values, beta_values, all_variances, levels=20, cmap="bone")
+    fig.colorbar(contour2, ax=axs[1], label=f"Variance over {N_iter} runs")
+    axs[1].set_xlabel(r"$\alpha$")
+    axs[1].set_ylabel(r"$\beta$")
+    axs[1].set_title(f"Performance Variance (for {n} states, {N} Grover reflections)")
+
+    plt.tight_layout()
+    unique_id = str(uuid.uuid4())[:8]
+    plot_filename = os.path.join(plots_dir, f"plot_{unique_id}.png")  
+    plt.savefig(plot_filename, dpi=300, bbox_inches="tight")
+
+    plt.close(fig)
+    plt.show()
