@@ -1,2 +1,4 @@
 QRW/lib/
 *.so
+results/*.pkl
+plots/*.png
