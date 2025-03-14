@@ -3,8 +3,12 @@ import pickle as pkl
 import jax.numpy as jnp
 import numpy as np
 import matplotlib.pyplot as plt
+import uuid
 
 results_base_dir = "results"
+plots_dir = "plots"
+
+os.makedirs(plots_dir, exist_ok=True)
 
 alpha_values = []
 beta_values = []
@@ -19,7 +23,7 @@ for file_name in os.listdir(results_base_dir):
 
     try:
         with open(file_path, "rb") as f:
-            data = pkl.load(f)  # Attempt to load the file
+            data = pkl.load(f)  
     except (pkl.UnpicklingError, EOFError) as e:
         print(f"Warning: Skipping corrupted file {file_name} ({e})")
         continue
@@ -77,6 +81,8 @@ beta_values = np.array(beta_values)
 all_estimates = np.array(all_estimates)
 all_variances = np.array(all_variances)
 
+
+
 if alpha_values.size == 0:
     print("No valid data to plot.")
 else:
@@ -88,11 +94,16 @@ else:
     axs[0].set_ylabel(r"$\beta$")
     axs[0].set_title(f"Performance (for {n} states, {N} Grover reflections)")
 
-    contour2 = axs[1].tricontourf(alpha_values, beta_values, all_variances, levels=20, cmap="magma")
+    contour2 = axs[1].tricontourf(alpha_values, beta_values, all_variances, levels=20, cmap="bone")
     fig.colorbar(contour2, ax=axs[1], label=f"Variance over {N_iter} runs")
     axs[1].set_xlabel(r"$\alpha$")
     axs[1].set_ylabel(r"$\beta$")
     axs[1].set_title(f"Performance Variance (for {n} states, {N} Grover reflections)")
 
     plt.tight_layout()
+    unique_id = str(uuid.uuid4())[:8]
+    plot_filename = os.path.join(plots_dir, f"plot_{unique_id}.png")  
+    plt.savefig(plot_filename, dpi=300, bbox_inches="tight")
+
+    plt.close(fig)
     plt.show()
