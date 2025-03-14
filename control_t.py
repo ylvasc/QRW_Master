@@ -7,8 +7,8 @@ import uuid
 results_base_dir = "results3"
 os.makedirs(results_base_dir, exist_ok=True)
 
-alpha_values = np.array([0.1, 1.0, 2.0])
-beta_values = np.array([0.1, 1.0, 2.0])
+alpha_values = np.array([0.1, 0.5, 1.0, 1.5, 2.0])
+beta_values = np.array([0.1, 0.5, 1.0, 1.5, 2.0])
 t_values = np.array([0.1, 1.0])
 
 n_sim = 100  # Number of states
@@ -29,7 +29,7 @@ for t in t_values:
             # Delete this after test
             print(f"Running with t={t}, alpha={a}, beta={b}, n={n_sim}, N_iter={N_iter}, N={N}, save_path={save_path}")
 
-            pid = os.spawnlp(os.P_NOWAIT, "python3", "python3", "simulator.py", 
+            pid = os.spawnlp(os.P_NOWAIT, "python3", "python3", "simulator_t.py", 
                             str(a), str(b), str(t), str(n_sim), str(N_iter), str(N), save_path)
             active_pids.append(pid)
         

@@ -50,8 +50,11 @@ for t_idx, t in enumerate(t_values):
         t_in_data = data["t"]
 
         # Proceed only if this file corresponds to the current t value
-        if t_in_data != t:
+        if not np.isclose(t_in_data, t):
             continue
+        #if t_in_data == t:
+            #print(f"Processing file {file_name} for t={t}")
+            #print(f"Unique (alpha, beta) pairs for t={t}: {set(zip(alpha_values_t, beta_values_t))}")
 
         # Check for NaNs and correct shapes
         if not isinstance(loss_funcs, np.ndarray) or not isinstance(results, np.ndarray):
@@ -101,11 +104,20 @@ for t_idx, t in enumerate(t_values):
     estimates_t = np.array(estimates_t)
     variances_t = np.array(variances_t)
 
-    
+    print(f"t={t}: Estimates shape: {estimates_t.shape}, Variances shape: {variances_t.shape}")
+    print("alpha: ", alpha_values_t)
+    print("beta: ", beta_values_t)
+    print("estimates: ", estimates_t)
+    print(f"NaNs in estimates_t for t={t}: {np.isnan(estimates_t).any()}")
+    print(f"NaNs in variances_t for t={t}: {np.isnan(variances_t).any()}")
+    print("Min alpha:", min(alpha_values_t), "Max alpha:", max(alpha_values_t))
+    print("Min beta:", min(beta_values_t), "Max beta:", max(beta_values_t))
+    print("Min estimate:", min(estimates_t), "Max estimate:", max(estimates_t))
+
     if alpha_values_t.size == 0:
         print("No valid data to plot.")  # Check if no valid data
     else:
-        contour1 = axs[t_idx, 0].tricontourf(alpha_values_t, beta_values_t, estimates_t, levels=20, cmap="viridis")
+        contour1 = axs[t_idx, 0].tricontourf(alpha_values_t, beta_values_t, estimates_t, levels=50, cmap="viridis")
         fig.colorbar(contour1, ax=axs[t_idx, 0], label=f"Mean Performance over {N_iter} runs")
         axs[t_idx, 0].set_xlabel(r"$\alpha$")
         axs[t_idx, 0].set_ylabel(r"$\beta$")
