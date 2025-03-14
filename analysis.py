@@ -102,7 +102,7 @@ else:
 
     plt.tight_layout()
     unique_id = str(uuid.uuid4())[:8]
-    plot_filename = os.path.join(plots_dir, f"plot_{unique_id}.png")  
+    plot_filename = os.path.join(plots_dir, f"plot_{unique_id}_n={n}_N={N}.png")  
     plt.savefig(plot_filename, dpi=300, bbox_inches="tight")
 
     plt.close(fig)
