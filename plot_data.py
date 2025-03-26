@@ -6,7 +6,6 @@ import scipy.interpolate
 import uuid
 import numpy as np
 
-# Load the data saved during analysis
 data_dir = "data"
 with open(os.path.join(data_dir, "analysis_results.pkl"), "rb") as f:
     data = pkl.load(f)
@@ -33,7 +32,7 @@ os.makedirs(plots_dir, exist_ok=True)
 fig = plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(alpha_values, beta_values, all_estimates, levels=50, cmap="coolwarm")
 contour = plt.tricontour(alpha_values, beta_values, all_estimates, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8)  
 plt.colorbar(contourf, label=f"Mean Performance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -62,7 +61,7 @@ plt.savefig(plot_filename1, dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 threshold = 0.5
-# Filter data for values > 0.5
+#Filter data for values > 0.5
 mask_above = all_estimates > threshold
 alpha_above = alpha_values[mask_above]
 beta_above = beta_values[mask_above]
@@ -80,7 +79,7 @@ triang_below = tri.Triangulation(alpha_below, beta_below)
 plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(triang_above, all_estimates_above, levels=50, cmap="Reds")
 contour = plt.tricontour(triang_above, all_estimates_above, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8)  
 plt.colorbar(contourf, label=f"Approx ratio Performance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -94,7 +93,7 @@ plt.close(fig)
 plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(triang_below, all_estimates_below, levels=50, cmap="Blues_r")
 contour = plt.tricontour(triang_below, all_estimates_below, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8)  
 plt.colorbar(contourf, label=f"Approx ratio Performance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -109,7 +108,7 @@ plt.close(fig)
 fig = plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(alpha_values, beta_values, all_variances, levels=50, cmap="viridis")
 contour = plt.tricontour(alpha_values, beta_values, all_variances, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8)  
 plt.colorbar(contourf, label=f"Variance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -117,13 +116,13 @@ plt.title(f"Variance of Approx ratio (for {n} states, {N} Grover reflections)", 
 unique_id2 = str(uuid.uuid4())[:8]
 plot_filename2 = os.path.join('plots', f"plot_{unique_id2}_variance_approxratio_n={n}_N={N}.png")
 plt.savefig(plot_filename2, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig)  
 
 # Mean Percentiles Plot
 fig = plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(alpha_values, beta_values, all_percentiles, levels=50, cmap="coolwarm")
 contour = plt.tricontour(alpha_values, beta_values, all_percentiles, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8) 
 plt.colorbar(contourf, label=f"Mean Percentile over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -131,7 +130,7 @@ plt.title(f"Mean Percentile (for {n} states, {N} Grover reflections)", pad=10)
 unique_id3 = str(uuid.uuid4())[:8]
 plot_filename3 = os.path.join('plots', f"plot_{unique_id3}_percentiles_n={n}_N={N}.png")
 plt.savefig(plot_filename3, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig)  
 
 threshold = 50
 # Filter data for values > 50
@@ -152,7 +151,7 @@ triang_below2 = tri.Triangulation(alpha_below, beta_below)
 plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(triang_above2, percentiles_above, levels=50, cmap="Reds")
 contour = plt.tricontour(triang_above2, percentiles_above, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8)  
 plt.colorbar(contourf, label=f"Percentile Performance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -166,7 +165,7 @@ plt.close(fig)
 plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(triang_below2, percentiles_below, levels=50, cmap="Blues_r")
 contour = plt.tricontour(triang_below2, percentiles_below, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8) 
 plt.colorbar(contourf, label=f"Percentile Performance over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -182,7 +181,7 @@ plt.close(fig)
 fig = plt.figure(figsize=(7, 6))
 contourf = plt.tricontourf(alpha_values, beta_values, percentiles_var, levels=50, cmap="viridis")
 contour = plt.tricontour(alpha_values, beta_values, percentiles_var, levels=10, colors='black', linewidths=0.5)
-plt.clabel(contour, inline=True, fontsize=8)  # Add labels to contour lines
+plt.clabel(contour, inline=True, fontsize=8) 
 plt.colorbar(contourf, label=f"Variance of Percentile over {N_iter} runs")
 plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\beta$")
@@ -190,7 +189,7 @@ plt.title(f"Variance over percentiles (for {n} states, {N} Grover reflections)",
 unique_id4 = str(uuid.uuid4())[:8]
 plot_filename4 = os.path.join('plots', f"plot_{unique_id4}_percentile_variance_n={n}_N={N}.png")
 plt.savefig(plot_filename4, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig) 
 
 
 # Best Probabilities Plot
@@ -203,7 +202,7 @@ plt.title(f"Top Probabilities for most amplified state (for {n} states, {N} Grov
 unique_id5 = str(uuid.uuid4())[:8]
 plot_filename5 = os.path.join('plots', f"plot_{unique_id5}_best_probabilities_n={n}_N={N}.png")
 plt.savefig(plot_filename5, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig)  
 
 # Best Probabilities Sum Plot
 fig = plt.figure(figsize=(7, 6))
@@ -215,7 +214,7 @@ plt.title(f"Top Probabilities for most amplified state (for {n} states, {N} Grov
 unique_id5 = str(uuid.uuid4())[:8]
 plot_filename5 = os.path.join('plots', f"plot_{unique_id5}_sum_best_probabilities_n={n}_N={N}.png")
 plt.savefig(plot_filename5, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig)  
 
 #optimal period plot
 fig = plt.figure(figsize=(7, 6))
@@ -227,7 +226,7 @@ plt.title(f"Optimal period (for {n} states, {N} Grover reflections)", pad=10)
 unique_id6 = str(uuid.uuid4())[:8]
 plot_filename6 = os.path.join('plots', f"plot_{unique_id6}_testopt_period_n={n}_N={N}.png")
 plt.savefig(plot_filename6, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig)  
 
 
 # optimal period variance
@@ -240,5 +239,5 @@ plt.title(f"Variance over Optimal period (for {n} states, {N} Grover reflections
 unique_id7 = str(uuid.uuid4())[:8]
 plot_filename7 = os.path.join('plots', f"plot_{unique_id7}_testoptvar_period_n={n}_N={N}.png")
 plt.savefig(plot_filename7, dpi=300, bbox_inches="tight")
-plt.close(fig)  # Close the plot to save memory
+plt.close(fig) 
 

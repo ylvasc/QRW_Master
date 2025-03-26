@@ -6,12 +6,11 @@ import scipy.signal
 import scipy.interpolate
 import matplotlib.pyplot as plt
 import seaborn as sns
-# Define directories
+
 results_base_dir = "results2"
 data_dir = "data"
 os.makedirs(data_dir, exist_ok=True)
 
-# Prepare data storage
 alpha_values = []
 beta_values = []
 all_estimates = []
@@ -40,7 +39,6 @@ for file_name in os.listdir(results_base_dir):
         print(f"Warning: Skipping corrupted file {file_name} ({e})")
         continue
 
-    # Ensure required keys exist
     required_keys = {"alpha", "beta", "loss_funcs", "results"}
     if not required_keys.issubset(data.keys()):
         print(f"Warning: Skipping file {file_name} (missing required keys)")
@@ -50,7 +48,6 @@ for file_name in os.listdir(results_base_dir):
     loss_funcs, results = data["loss_funcs"], data["results"]
     N_iter, n, N = results.shape
 
-    # Check for NaNs and correct shapes
     if np.isnan(results).any() or np.isnan(loss_funcs).any():
         print(f"Warning: Skipping file {file_name} (contains NaN values)")
         continue
