@@ -5,3 +5,6 @@ plots/*.png
 QRW/
 results2/*.pkl
 results3/*.pkl
+data
+results2
+results_from_alex
