@@ -6,7 +6,7 @@ import scipy.interpolate
 import uuid
 import numpy as np
 
-data_dir = "data"
+data_dir = "data2"
 with open(os.path.join(data_dir, "analysis_results.pkl"), "rb") as f:
     data = pkl.load(f)
 
@@ -25,7 +25,7 @@ best_probabilities_sum = data["best_probabilities_sum"]
 opt_iter = data["opt_iter"]
 opt_iter_var = data["opt_iter_var"]
 
-plots_dir = "plots"
+plots_dir = "plots2"
 os.makedirs(plots_dir, exist_ok=True)
 
 grid_alpha, grid_beta = np.meshgrid(

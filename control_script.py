@@ -7,15 +7,18 @@ import uuid
 results_base_dir = "results"
 os.makedirs(results_base_dir, exist_ok=True)
 
-alpha_values = np.array([0.1, 1.0, 2.0])
-beta_values = np.array([0.5, 1.0, 2.0])
 
-n_sim = 100  # Number of states
-N_iter = 10  # Number of iterations per (alpha, beta) pair
-N = 100       # Number of Grover iterations
+alpha_values = np.linspace(0.1, 2.0, 25)  #or 50 steps???
+beta_values = np.linspace(0.1, 2.0, 25)
+
+# alpha_values = np.linspace(0.01, 1.0, 25)    #also test
+# beta_values = np.linspace(0.01, 1.0, 25)
+
+n_sim = 1000  # Number of states
+N_iter = 50  # Number of iterations per (alpha, beta) pair
+N = 200       # Number of Grover iterations
 max_jobs = 50  # Limit on concurrent jobs
 active_pids = []
-
 
 
 for a in alpha_values:

@@ -4,8 +4,8 @@ import jax.numpy as jnp
 import numpy as np
 import scipy.signal
 
-results_base_dir = "results2"
-data_dir = "data"
+results_base_dir = "results_from_alex"
+data_dir = "data2"
 os.makedirs(data_dir, exist_ok=True)
 
 alpha_values, beta_values = [], []
