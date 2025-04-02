@@ -8,8 +8,8 @@ import matplotlib.tri as tri
 import scipy.interpolate
 
 
-input_dir = "data_t"  
-plots_dir = "plots_t"
+input_dir = "data_t_test"  
+plots_dir = "plots_t_test"
 os.makedirs(plots_dir, exist_ok=True)
 
 with open(os.path.join(input_dir, "t_analysis_results.pkl"), "rb") as f:
@@ -17,7 +17,7 @@ with open(os.path.join(input_dir, "t_analysis_results.pkl"), "rb") as f:
 
 
 #generate plots for each t
-for t, data in analysis_results.items():
+for (t1,t2), data in analysis_results.items():
     alpha_values = data["alpha_values"]
     beta_values = data["beta_values"]
     estimates = data["estimates"]
@@ -66,56 +66,56 @@ for t, data in analysis_results.items():
 
     #approx ratio
     generate_plots(estimates, 
-                   f"Approximation Ratio (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Approximation Ratio (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "coolwarm", "Mean Approx ratio", 
-                   f"performance_t_{t}")
+                   f"performance_t1_{t1}_t2_{t2}")
 
     #approx ratio var
     generate_plots(variances, 
-                   f"Approximation Ratio Variance (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Approximation Ratio Variance (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "viridis", "Variance", 
-                   f"variance_t_{t}")
+                   f"variance_t1_{t1}_t2_{t2}")
 
     #percentiles
     generate_plots(percentiles, 
-                   f"Mean Percentile (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Mean Percentile (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "coolwarm", "Mean Percentile", 
-                   f"percentile_t_{t}")
+                   f"percentile_t1_{t1}_t2_{t2}")
 
     #percentiles var
     generate_plots(percentiles_var, 
-                   f"Percentile Variance (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Percentile Variance (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "viridis", "Variance of Percentiles", 
-                   f"percentile_variance_t_{t}")
+                   f"percentile_variance_t1_{t1}_t2_{t2}")
 
     #best prob
     generate_plots(best_probabilities, 
-                   f"Top Probabilities (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Top Probabilities (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "hot", "Best Probabilities", 
-                   f"best_probabilities_t_{t}")
+                   f"best_probabilities_t1_{t1}_t2_{t2}")
 
     #best prob var
     generate_plots(best_probabilities_var, 
-                   f"Best Probabilities Variance (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Best Probabilities Variance (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "viridis", "Variance of Best Probabilities", 
-                   f"best_probabilities_var_t_{t}")
+                   f"best_probabilities_var_t1_{t1}_t2_{t2}")
 
     #best Probabilities Sum (Top 10)
     generate_plots(best_probabilities_sum, 
-                   f"Best Probabilities Sum (Top 10) (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Best Probabilities Sum (Top 10) (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "plasma", "Sum of Best Probabilities (Top 10)", 
-                   f"best_probabilities_sum_t_{t}")
+                   f"best_probabilities_sum_t1_{t1}_t2_{t2}")
 
     # optimal iteration number
     generate_plots(opt_iter, 
-                   f"Optimal Iterations (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Optimal Iterations (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "inferno", "Optimal Iterations", 
-                   f"opt_iter_t_{t}")
+                   f"opt_iter_t1_{t1}_t2_{t2}")
 
     #opt iter var
     generate_plots(opt_iter_var, 
-                   f"Variance in Optimal Iterations (t={t}, {n} states, {N} Grover reflections)", 
+                   f"Variance in Optimal Iterations (t1={t1}, t2= {t2}, {n} states, {N} Grover reflections)", 
                    "viridis", "Variance of Optimal Iterations", 
-                   f"opt_iter_var_t_{t}")
+                   f"opt_iter_var_t1_{t1}_t2_{t2}")
 
 
